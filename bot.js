@@ -32,6 +32,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '!') {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
+        console.log(args)
 
         args = args.splice(1);
         switch(cmd) {
@@ -89,7 +90,7 @@ function handleTournaments(todo) {
         if (err) throw err;
         console.log(result)
         db.close();
-        return 'Not an error! wuhuu'
+        return 'Not an error! wuhuu';
       })
     });
     break;
