@@ -44,6 +44,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
             break;
             case 'hello':
+            logger.info('Found event hello')
                 bot.sendMessage({
                   to: channelID,
                   message: 'Hello ' + user + ' in the channel!'
@@ -55,6 +56,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             break;
             // !ping
             case 'ping':
+            logger.info('Found event ping')
                 bot.sendMessage({
                     to: channelID,
                     message: 'Pong!'
@@ -78,16 +80,18 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 });
 
 function handleTournaments(todo) {
-switch (todo) {
-  default:
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    db.collection(tournament_collection).find({}).toArray(function(err, result) {
+  logger.info('handleTournaments: ' + todo)
+  switch (todo) {
+    default:
+    MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      return result;
-      db.close();
-    })
-  });
-  break;
-}
+      db.collection(tournament_collection).find({}).toArray(function(err, result) {
+        if (err) throw err;
+        console.log(result)
+        db.close();
+        return 'Not an error! wuhuu'
+      })
+    });
+    break;
+  }
 }
