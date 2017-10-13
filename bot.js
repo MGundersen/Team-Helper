@@ -36,7 +36,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         args = args.splice(1);
         switch(cmd) {
             case 'tournaments':
-                handleTournaments(args[1]);
+                logger.info('Found event tournaments')
+                var tournament_info = handleTournaments(args[1]);
+                bot.sendMessage({
+                  to: channelID,
+                  message: 'Current tournament info!:\n' + tournament_info
+                });
             break;
             case 'hello':
                 bot.sendMessage({
@@ -45,7 +50,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 bot.sendMessage({
                   to: userID,
-                  message: 'Hello ' + userID + ' in private chat!'
+                  message: 'Hello ' + user + ' in private chat!'
                 });
             break;
             // !ping
