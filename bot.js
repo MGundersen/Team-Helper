@@ -34,7 +34,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
         console.log(args)
 
-        args = args.splice(1);
         switch(cmd) {
             case 'tournaments':
                 logger.info('Found event tournaments')
@@ -75,7 +74,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: user + ' is OP'
                 });
             break;
-            // Just add any case commands if you want to..
          }
      }
 });
