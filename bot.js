@@ -45,7 +45,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 bot.sendMessage({
                   to: userID,
-                  message: 'Hello ' + userdID + ' in private chat!'
+                  message: 'Hello ' + userID + ' in private chat!'
                 });
             break;
             // !ping
