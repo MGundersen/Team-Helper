@@ -12,12 +12,15 @@ var bot = new Discord.Client({
    token: auth.token,
    autorun: true
 });
+
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(bot.username + ' - (' + bot.id + ')');
 });
+
 bot.on('message', function (user, userID, channelID, message, evt) {
+    var filesystem = require('fs'); // If we need to perform changes to the filesystem
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
     if (message.substring(0, 1) == '!') {
@@ -26,6 +29,16 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
         args = args.splice(1);
         switch(cmd) {
+            case 'hello':
+                bot.sendMessage({
+                  to: channelID,
+                  message: 'Hello ' + user + ' in the channel!'
+                });
+                bot.sendMessage({
+                  to: userID,
+                  message: 'Hello ' + usedID + ' in private chat!'
+                });
+            break;
             // !ping
             case 'ping':
                 bot.sendMessage({
@@ -33,20 +46,19 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: 'Pong!'
                 });
             break;
-            case 'lol':
+            case 'help':
                 bot.sendMessage({
                     to: channelID,
-                    message: 'noob'
+                    message: 'All available commands are "!Pong" and "!op"'
                 });
             break;
             case 'op':
                 bot.sendMessage({
                     to: channelID,
-                    message: 'Dr. Boom is OP'
+                    message: user + ' is OP'
                 });
             break;
             // Just add any case commands if you want to..
          }
      }
 });
-
