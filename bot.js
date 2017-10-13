@@ -1,18 +1,24 @@
-var Discord = require('discord.io');
-var logger = require('winston');
-var auth = require('./auth.json');
+var Discord = require('discord.io');  // Using the package discord.io
+var logger = require('winston');      // Using the package winston
+var auth = require('./auth.json');    // Using the file auth.json
+var MongoClient = require('mongodb').MongoClient // Using the package for the mongodb
+var url = "mongodb://localhost:27017/team-helper-tournament-info"; // Url for the db - The collection is called "tournaments"
+var tournament_collection = "tournaments";
+
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
     colorize: true
 });
 logger.level = 'debug';
+
 // Initialize Discord Bot
 var bot = new Discord.Client({
    token: auth.token,
    autorun: true
 });
 
+// This is like an event, so when the bot is turned on these 2 functions are run
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
@@ -29,6 +35,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
         args = args.splice(1);
         switch(cmd) {
+            case 'tournaments':
+                handleTournaments(args[1]);
+            break;
             case 'hello':
                 bot.sendMessage({
                   to: channelID,
@@ -62,3 +71,18 @@ bot.on('message', function (user, userID, channelID, message, evt) {
          }
      }
 });
+
+function handleTournaments(todo) {
+switch (todo) {
+  default:
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.collection(tournament_collection).find({}).toArray(function(err, result) {
+      if (err) throw err;
+      return result;
+      db.close();
+    })
+  });
+  break;
+}
+}
