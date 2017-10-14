@@ -39,6 +39,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event tournaments')
                 // Callback function
                 handleTournaments(args[1], function(result) {
+                  console.log("Result from handle tournaments: " + result)
                   bot.sendMessage({
                     to: channelID,
                     message: "Here you go, @" + user + "!\n" + result
@@ -103,11 +104,11 @@ function handleTournaments(args, callback) {
           "Weekday: " + result.date_of_week + " - " +
           "Time: " + result.time + "\n";
           returnInformation = returnInformation + resultInformation;
-          console.log("resultInformation: " + resultInformation)
-          console.log("returnInformation: " + returnInformation)
+          //console.log("resultInformation: " + resultInformation)
+          //console.log("returnInformation: " + returnInformation)
         })
-        db.close();
         callback(returnInformation);
+        db.close();
     });
     break;
   }
