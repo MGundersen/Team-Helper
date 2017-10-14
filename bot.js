@@ -106,8 +106,9 @@ function handleTournaments(args, callback) {
           console.log("resultInformation: " + resultInformation)
           console.log("returnInformation: " + returnInformation)
         })
+        db.close();
+        callback(returnInformation);
     });
     break;
   }
-  callback(returnInformation)
 }
