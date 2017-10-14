@@ -94,7 +94,7 @@ function handleTournaments(args, callback) {
     case "all":
     MongoClient.connect(url, function(err, db) {
       if (err) {
-        logger.info("Unable to connect to mongoDB client")
+        logger.error("Unable to connect to mongoDB client")
         throw err;
       }
 
@@ -102,7 +102,7 @@ function handleTournaments(args, callback) {
         .find({})
         .toArray(function(err, result){
           if (err) {
-            logger.info("Unable to make collection to array")
+            logger.error("Unable to make collection to array")
             throw err;
           }
           db.close();
@@ -113,7 +113,7 @@ function handleTournaments(args, callback) {
             "Team size: " + newEntry.team_size + " - " +
             "Weekday: " + newEntry.date_of_week + " - " +
             "Time: " + newEntry.time + "\n";
-            console.log("Result from db: " + informationString)
+            logger.info("Result from db: " + informationString)
             return informationString;
           })
           callback("NOTHING");
