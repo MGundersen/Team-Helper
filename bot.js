@@ -39,23 +39,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event tournaments')
                 // Callback function
                 handleTournaments(args[1], function(result) {
+                  // @Result is an array of JSON objects. To extract them
+                  // you need to do something like this for each entry
+                  // entry = JSON.parse(JSON.stringify(entry));
+                  var informationMessage = "Here you go, " + user + "!\n";
                   bot.sendMessage({
                     to: channelID,
-                    message: "Here you go, " + user + "!\n"
+                    message: "Currently unable to display tournament info :("
                   });
-
-                  result.map(function(entry){
-                    var newEntry = JSON.parse(JSON.stringify(entry));
-                    var informationString =
-                    "Tournament site: " + newEntry.tournament_name + " - " +
-                    "Team size: " + newEntry.team_size + " - " +
-                    "Weekday: " + newEntry.date_of_week + " - " +
-                    "Time: " + newEntry.time + "\n";
-                    bot.sendMessage({
-                      to: channelID,
-                      message: informationString
-                    });
-                  })
                 }
               );
             break;
@@ -93,7 +84,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'op':
                 bot.sendMessage({
                     to: channelID,
-                    message: "@" + user + " is OP"
+                    message: "@" + user + " is OP :gc:"
                 });
             break;
          }
