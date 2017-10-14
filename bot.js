@@ -44,7 +44,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
             break;
             case 'hello':
-            logger.info('Found event hello')
+                logger.info('Found event hello')
                 bot.sendMessage({
                   to: channelID,
                   message: 'Hello ' + user + ' in the channel!'
@@ -56,22 +56,28 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             break;
             // !ping
             case 'ping':
-            logger.info('Found event ping')
+                logger.info('Found event ping')
                 bot.sendMessage({
                     to: channelID,
                     message: 'Pong!'
                 });
             break;
             case 'help':
+                logger.info('Found event help')
                 bot.sendMessage({
                     to: channelID,
-                    message: 'All available commands are "!Pong" and "!op"'
+                    message: "All available commands are:\n" +
+                    "Ping \t Simply responds you with pong!\n" +
+                    "op \t Tells you, that you are OP!\n" +
+                    "help \t Gets this menu\n" +
+                    "hello \t Greets you back in the channel and in a private msg\n" +
+                    "tournaments \t Responds with a list of all tournaments - type '!tournaments help' for more information\n"
                 });
             break;
             case 'op':
                 bot.sendMessage({
                     to: channelID,
-                    message: user + ' is OP'
+                    message: user + " is OP"
                 });
             break;
          }
@@ -79,7 +85,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 });
 
 function handleTournaments(todo) {
-  logger.info('handleTournaments: ' + todo)
+  logger.info("handleTournaments: " + todo)
   switch (todo) {
     default:
     MongoClient.connect(url, function(err, db) {
@@ -88,7 +94,7 @@ function handleTournaments(todo) {
         if (err) throw err;
         console.log(result)
         db.close();
-        return 'Not an error! wuhuu';
+        return "Not an error! wuhuu";
       })
     });
     break;
