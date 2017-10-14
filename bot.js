@@ -116,7 +116,7 @@ function handleTournaments(args, callback) {
             logger.info("Result from db: " + informationString)
             return informationString;
           })
-          callback("NOTHING");
+          callback(result);
         })
     });
     break;
