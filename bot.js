@@ -18,7 +18,7 @@ var bot = new Discord.Client({
    autorun: true
 });
 
-// This is like an event, so when the bot is turned on these 2 functions are run
+// This is like an event
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
@@ -87,24 +87,25 @@ bot.on('message', function (user, userID, channelID, message, evt) {
      }
 });
 
-function handleTournaments(todo, callback) {
-  logger.info("handleTournaments: " + todo)
-  var returnInformation = "Nothing was found! :O";
-  switch (todo) {
+function handleTournaments(args, callback) {
+  logger.info("handleTournaments args: " + args)
+  var returnInformation = "";
+  switch (args) {
     case "all":
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       db.collection(tournament_collection)
-        .find({}, { _id : false })
+        .find({})
         .forEach(function(result) {
-          returnInformation = returnInformation +
+          var resultInformation =
           "Tournament name: " + result.tournament_name + " - " +
           "Team size: " + result.team_size + " - " +
           "Weekday: " + result.date_of_week + " - " +
           "Time: " + result.time + "\n";
+          returnInformation = returnInformation + resultInformation;
         })
-        callback(returnInformation)
     });
     break;
   }
+  callback(returnInformation)
 }
