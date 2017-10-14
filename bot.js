@@ -100,8 +100,8 @@ function handleTournaments(args, callback) {
         .toArray(function(err, result){
           if (err) throw err;
           db.close();
-          console.log("result from db: " + result)
-          callback(result);
+          console.log("result from db: " + JSON.parse(result))
+          callback(JSON.parse(result));
         })
     });
     break;
