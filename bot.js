@@ -54,11 +54,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event hello')
                 bot.sendMessage({
                   to: channelID,
-                  message: 'Hello ' + user + ' in the channel!'
+                  message: 'Hello <@' + user + '> in the channel!'
                 });
                 bot.sendMessage({
                   to: userID,
-                  message: 'Hello ' + user + ' in private chat!'
+                  message: 'Hello <@' + user + '> in private chat!'
                 });
             break;
             // !ping
@@ -84,7 +84,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'op':
                 bot.sendMessage({
                     to: channelID,
-                    message: "@" + user + " is OP :gc:"
+                    message: user + " is OP"
                 });
             break;
          }
