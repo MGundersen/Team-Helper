@@ -90,7 +90,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function handleTournaments(args, callback) {
   logger.info("handleTournaments args: " + args)
-  var returnInformation = "ssdfn";
   switch (args) {
     case "all":
     MongoClient.connect(url, function(err, db) {
@@ -100,8 +99,11 @@ function handleTournaments(args, callback) {
         .toArray(function(err, result){
           if (err) throw err;
           db.close();
-          console.log("result from db: " + JSON.parse(result))
-          callback(JSON.parse(result));
+          result.map(function(entry){
+            return JSON.parse(entry);
+          })
+          console.log("Result from db: " + result)
+          callback(result);
         })
     });
     break;
