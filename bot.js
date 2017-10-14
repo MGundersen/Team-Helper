@@ -98,18 +98,19 @@ function handleTournaments(args, callback) {
         .find({})
         .toArray(function(err, result){
           if (err) throw err;
-          db.close();
-          result.map(function(entry){
+          var resultInformation = "";
+          result.forEach(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
             var informationString =
-            "Tournament name: " + newEntry.tournament_name + " - " +
+            "Tournament site: " + newEntry.tournament_name + " - " +
             "Team size: " + newEntry.team_size + " - " +
             "Weekday: " + newEntry.date_of_week + " - " +
             "Time: " + newEntry.time + "\n";
             console.log("Result from db: " + informationString)
-            return informationString;
+            resultInformation += informationString;
           })
-          callback("NOTHING");
+          callback(resultInformation);
+          db.close();
         })
     });
     break;
