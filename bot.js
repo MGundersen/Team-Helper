@@ -98,8 +98,7 @@ function handleTournaments(args, callback) {
         .find({})
         .toArray(function(err, result){
           if (err) throw err;
-          var resultInformation = "";
-          result.forEach(function(entry){
+          result.map(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
             var informationString =
             "Tournament site: " + newEntry.tournament_name + " - " +
@@ -107,9 +106,9 @@ function handleTournaments(args, callback) {
             "Weekday: " + newEntry.date_of_week + " - " +
             "Time: " + newEntry.time + "\n";
             console.log("Result from db: " + informationString)
-            resultInformation += informationString;
+            return informationString;
           })
-          callback(resultInformation);
+          callback(result);
           db.close();
         })
     });
