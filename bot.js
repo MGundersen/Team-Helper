@@ -97,7 +97,8 @@ function handleTournaments(args, callback) {
       if (err) throw err;
       db.collection(tournament_collection)
         .find({})
-        .toArray(function(result){
+        .toArray(function(err, result){
+          if (err) throw err;
           db.close();
           console.log("result from db: " + result)
           callback(result);
