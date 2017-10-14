@@ -101,7 +101,7 @@ function handleTournaments(args, callback) {
           db.close();
           result.map(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
-            console.log("Result from db: " + newEntry)
+            console.log("Result from db: " + newEntry.date_of_week)
             return newEntry.date_of_week;
           })
           callback("NOTHING");
