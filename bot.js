@@ -99,7 +99,8 @@ function handleTournaments(args, callback) {
         .find({})
         .toArray(function(result){
           db.close();
-          callback(JSON.parse(result));
+          console.log("result from db: " + result)
+          callback(result);
         })
     });
     break;
