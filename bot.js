@@ -98,6 +98,7 @@ function handleTournaments(args, callback) {
         .find({})
         .toArray(function(err, result){
           if (err) throw err;
+          db.close();
           result.map(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
             var informationString =
@@ -109,7 +110,6 @@ function handleTournaments(args, callback) {
             return informationString;
           })
           callback(result);
-          db.close();
         })
     });
     break;
