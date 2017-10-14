@@ -93,11 +93,18 @@ function handleTournaments(args, callback) {
   switch (args) {
     case "all":
     MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
+      if (err) {
+        logger.info("Unable to connect to mongoDB client")
+        throw err;
+      }
+
       db.collection(tournament_collection)
         .find({})
         .toArray(function(err, result){
-          if (err) throw err;
+          if (err) {
+            logger.info("Unable to make collection to array")
+            throw err;
+          }
           db.close();
           result.map(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
@@ -109,7 +116,7 @@ function handleTournaments(args, callback) {
             console.log("Result from db: " + informationString)
             return informationString;
           })
-          callback(result);
+          callback("NOTHING");
         })
     });
     break;
