@@ -39,16 +39,23 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event tournaments')
                 // Callback function
                 handleTournaments(args[1], function(result) {
-                  logger.info("Result from handle tournaments: " + result)
-                  var informationMessage = "Here you go, " + user + "!\n";
-                  result.forEach(function(entry){
-                      logger.info("for loop: " + entry)
-                      informationMessage = informationMessage + entry;
-                  })
                   bot.sendMessage({
                     to: channelID,
-                    message: informationMessage
+                    message: "Here you go, " + user + "!\n"
                   });
+
+                  result.map(function(entry){
+                    var newEntry = JSON.parse(JSON.stringify(entry));
+                    var informationString =
+                    "Tournament site: " + newEntry.tournament_name + " - " +
+                    "Team size: " + newEntry.team_size + " - " +
+                    "Weekday: " + newEntry.date_of_week + " - " +
+                    "Time: " + newEntry.time + "\n";
+                    bot.sendMessage({
+                      to: channelID,
+                      message: informationString
+                    });
+                  })
                 }
               );
             break;
@@ -102,7 +109,6 @@ function handleTournaments(args, callback) {
         logger.error("Unable to connect to mongoDB client")
         throw err;
       }
-
       db.collection(tournament_collection)
         .find({})
         .toArray(function(err, result){
@@ -111,16 +117,6 @@ function handleTournaments(args, callback) {
             throw err;
           }
           db.close();
-          result.map(function(entry){
-            var newEntry = JSON.parse(JSON.stringify(entry));
-            var informationString =
-            "Tournament site: " + newEntry.tournament_name + " - " +
-            "Team size: " + newEntry.team_size + " - " +
-            "Weekday: " + newEntry.date_of_week + " - " +
-            "Time: " + newEntry.time + "\n";
-            logger.info("Result from db: " + informationString)
-            return informationString;
-          })
           callback(result);
         })
     });
