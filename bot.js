@@ -37,11 +37,13 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         switch(cmd) {
             case 'tournaments':
                 logger.info('Found event tournaments')
-                var tournament_info = handleTournaments(args[1]);
-                bot.sendMessage({
-                  to: channelID,
-                  message: 'Current tournament info!:\n' + tournament_info
-                });
+                handleTournaments(args[1], function(result) {
+                  bot.sendMessage({
+                    to: channelID,
+                    message: 'Current tournament info!:\n' + result
+                  });
+                }
+              );
             break;
             case 'hello':
                 logger.info('Found event hello')
@@ -67,24 +69,24 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 bot.sendMessage({
                     to: channelID,
                     message: "All available commands are:\n" +
-                    "Ping \t Simply responds you with pong!\n" +
-                    "op \t Tells you, that you are OP!\n" +
-                    "help \t Gets this menu\n" +
-                    "hello \t Greets you back in the channel and in a private msg\n" +
-                    "tournaments \t Responds with a list of all tournaments - type '!tournaments help' for more information\n"
+                    "Ping \t- Simply responds you with pong!\n" +
+                    "op \t- Tells you, that you are OP!\n" +
+                    "help \t- Gets this menu\n" +
+                    "hello \t- Greets you back in the channel and in a private msg\n" +
+                    "tournaments \t- Responds with a list of all tournaments - type '!tournaments help' for more information\n"
                 });
             break;
             case 'op':
                 bot.sendMessage({
                     to: channelID,
-                    message: user + " is OP"
+                    message: "@" + user + " is OP"
                 });
             break;
          }
      }
 });
 
-function handleTournaments(todo) {
+function handleTournaments(todo, callback) {
   logger.info("handleTournaments: " + todo)
   switch (todo) {
     default:
@@ -92,9 +94,9 @@ function handleTournaments(todo) {
       if (err) throw err;
       db.collection(tournament_collection).find({}).toArray(function(err, result) {
         if (err) throw err;
-        console.log(result)
         db.close();
-        return "Not an error! wuhuu";
+        logger.info(result)
+        callback(result);
       })
     });
     break;
