@@ -42,7 +42,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                   console.log("Result from handle tournaments: " + result)
                   bot.sendMessage({
                     to: channelID,
-                    message: "Here you go, @" + user + "!\n" + result
+                    message: "Here you go, @" + user + "!\n" + result.toString()
                   });
                 }
               );
