@@ -37,10 +37,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         switch(cmd) {
             case 'tournaments':
                 logger.info('Found event tournaments')
+                // Callback function
                 handleTournaments(args[1], function(result) {
                   bot.sendMessage({
                     to: channelID,
-                    message: 'Current tournament info!:\n' + result
+                    message: "Here you go, @" + user + "!\n" + result
                   });
                 }
               );
@@ -96,7 +97,7 @@ function handleTournaments(todo, callback) {
         if (err) throw err;
         db.close();
         logger.info(result)
-        callback(result);
+        callback(JSON.stringify(result));
       })
     });
     break;
