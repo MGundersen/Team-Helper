@@ -100,7 +100,7 @@ function handleTournaments(args, callback) {
           if (err) throw err;
           db.close();
           result.map(function(entry){
-            console.log("Result from db: " + entry)
+            console.log("Result from db: " + JSON.stringify(entry))
             return entry;
           })
           callback("NOTHING");
