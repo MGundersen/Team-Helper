@@ -39,10 +39,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event tournaments')
                 // Callback function
                 handleTournaments(args[1], function(result) {
-                  console.log("Result from handle tournaments: " + result)
+                  console.log("Result from handle tournaments: " + result.toString())
+                  var informationMessage = "Here you go, " + user + "!\n";
+                  result.forEach(function(entry){
+                      informationMessage = informationMessage + entry;
+                  })
                   bot.sendMessage({
                     to: channelID,
-                    message: "Here you go, @" + user + "!\n" + result.toString()
+                    message: informationMessage
                   });
                 }
               );
