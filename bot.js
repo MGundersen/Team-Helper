@@ -90,15 +90,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 function handleTournaments(todo, callback) {
   logger.info("handleTournaments: " + todo)
   switch (todo) {
-    default:
+    case "all":
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      db.collection(tournament_collection).find({}).toArray(function(err, result) {
-        if (err) throw err;
-        db.close();
-        logger.info(result)
-        callback(JSON.stringify(result));
-      })
+      db.collection(tournament_collection)
+        .find({}, { _id : false })
+        .forEach(function(err, result) {
+          if (err) throw err;
+          console.log(result)
+        })
     });
     break;
   }
