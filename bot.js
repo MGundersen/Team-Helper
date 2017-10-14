@@ -101,8 +101,13 @@ function handleTournaments(args, callback) {
           db.close();
           result.map(function(entry){
             var newEntry = JSON.parse(JSON.stringify(entry));
-            console.log("Result from db: " + newEntry.date_of_week)
-            return newEntry.date_of_week;
+            var informationString =
+            "Tournament name: " + newEntry.tournament_name + " - " +
+            "Team size: " + newEntry.team_size + " - " +
+            "Weekday: " + newEntry.date_of_week + " - " +
+            "Time: " + newEntry.time + "\n";
+            console.log("Result from db: " + informationString)
+            return informationString;
           })
           callback("NOTHING");
         })
