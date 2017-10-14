@@ -100,8 +100,9 @@ function handleTournaments(args, callback) {
           if (err) throw err;
           db.close();
           result.map(function(entry){
-            console.log("Result from db: " + JSON.stringify(entry))
-            return entry;
+            var newEntry = JSON.parse(JSON.stringify(entry));
+            console.log("Result from db: " + newEntry)
+            return newEntry.date_of_week;
           })
           callback("NOTHING");
         })
