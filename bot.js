@@ -103,6 +103,8 @@ function handleTournaments(args, callback) {
           "Weekday: " + result.date_of_week + " - " +
           "Time: " + result.time + "\n";
           returnInformation = returnInformation + resultInformation;
+          console.log("resultInformation: " + resultInformation)
+          console.log("returnInformation: " + returnInformation)
         })
     });
     break;
