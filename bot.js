@@ -95,8 +95,7 @@ function handleTournaments(todo, callback) {
       if (err) throw err;
       db.collection(tournament_collection)
         .find({}, { _id : false })
-        .forEach(function(err, result) {
-          if (err) throw err;
+        .forEach(function(result) {
           console.log(result)
         })
     });
