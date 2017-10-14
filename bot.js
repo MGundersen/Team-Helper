@@ -90,26 +90,30 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function handleTournaments(args, callback) {
   logger.info("handleTournaments args: " + args)
-  var returnInformation = "";
+  var returnInformation = "ssdfn";
   switch (args) {
     case "all":
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       db.collection(tournament_collection)
         .find({})
-        .forEach(function(result) {
-          var resultInformation =
-          "Tournament name: " + result.tournament_name + " - " +
-          "Team size: " + result.team_size + " - " +
-          "Weekday: " + result.date_of_week + " - " +
-          "Time: " + result.time + "\n";
-          returnInformation = returnInformation + resultInformation;
-          //console.log("resultInformation: " + resultInformation)
-          //console.log("returnInformation: " + returnInformation)
+        .toArray(function(result){
+          db.close();
+          callback(result);
         })
-        callback(returnInformation);
-        db.close();
     });
     break;
   }
 }
+/*
+.forEach(function(result) {
+  var resultInformation =
+  "Tournament name: " + result.tournament_name + " - " +
+  "Team size: " + result.team_size + " - " +
+  "Weekday: " + result.date_of_week + " - " +
+  "Time: " + result.time + "\n";
+  returnInformation = returnInformation + resultInformation;
+  //console.log("resultInformation: " + resultInformation)
+  //console.log("returnInformation: " + returnInformation)
+})
+*/
