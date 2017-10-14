@@ -89,6 +89,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function handleTournaments(todo, callback) {
   logger.info("handleTournaments: " + todo)
+  var returnInformation = "Nothing was found! :O";
   switch (todo) {
     case "all":
     MongoClient.connect(url, function(err, db) {
@@ -96,8 +97,13 @@ function handleTournaments(todo, callback) {
       db.collection(tournament_collection)
         .find({}, { _id : false })
         .forEach(function(result) {
-          console.log(result)
+          returnInformation = returnInformation +
+          "Tournament name: " + result.tournament_name + " - " +
+          "Team size: " + result.team_size + " - " +
+          "Weekday: " + result.date_of_week + " - " +
+          "Time: " + result.time + "\n";
         })
+        callback(returnInformation)
     });
     break;
   }
