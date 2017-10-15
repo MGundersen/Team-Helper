@@ -29,7 +29,8 @@ bot.on('ready', () => {
     bot.user.setActivity(`${config.prefix}help | ${bot.guilds.size} servers`)
 });
 
-bot.on('message', message => {
+// Async? (Allowed me to use await in the ban case to catch errors)
+bot.on('message', async message => {
     // Check whether we are being messaged by a bot, and whether it is a message for us!
     if (message.author.bot || !message.content.startsWith(config.prefix)) return;
     // Get the arguments
@@ -37,6 +38,7 @@ bot.on('message', message => {
     // Get the actual command
     const command = arguments.shift().toLowerCase();
     // What do perform?
+    console.log( "Arguments: " + arguments );
     switch(command) {
         case 'tournaments':
             // Callback function
@@ -75,20 +77,35 @@ bot.on('message', message => {
             memberToKick.kick(`Kicked by ${message.author.tag}`);
             break;
         case 'ban':
+            // Does the user has the rights to ban members?
             if (!message.member.permissions.has('ADMINISTRATOR'))
             {
                 message.reply("You are not an admin!!");
             }
+            // Is the mention a valid member?
             const memberToBan = message.mentions.members.first();
-            if (!memberToBan)
+            if(!memberToBan)
             {
-                return message.reply(`Invalid usage, please do '${config.prefix}ban @user1234 time'` )
+                return message.reply("Please mention a valid member of this server");
             }
-            message.channel.search( memberToBan + ' has been banned.' );
-            memberToBan.ban({
-                days: args[1] || null,
-                reason: `Banned by ${message.author}`
+            // Is the member even bannable?
+            if(!memberToBan.bannable)
+            {
+                return message.reply("I cannot ban this user! Do they have a higher role? Do I have ban permissions?");
+            }
+            // Ban reason - removes the first index, and then joins the rest with spaces in between.
+            // It is done because a ban message looks like '!ban user1234 reason for this ban', therefore we remove user1234 and concat the rest together
+            const banReason = arguments.slice(1).join(' ');
+            if(!banReason)
+            {
+                return message.reply("Please indicate a reason for the ban!");
+            }
+            // Ban the user
+            await memberToBan.ban(banReason).catch( function(error) {
+                message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`);
             });
+            message.reply(`${member.user.tag} has been banned by ${message.author.tag} because: ${banReason}`);
+
             break;
         case 'help':
             message.channel.send(
@@ -107,6 +124,7 @@ bot.on('guildCreate', console.log);
 
 bot.on('guildDelete', console.log);
 
+// Welcome message for new users
 bot.on('guildMemberAdd', function(guildMember) {
     console.log( 'Member was added.' );
     // Check if our default guild is correct
@@ -168,8 +186,8 @@ bot.on('emojiCreate', function(event) {
 
 // Sends a message to the default channel about emojo update
 bot.on('emojiUpdate', function(oldEvent, newEvent) {
-    console.log( 'Emoji was updated.' );
     if (oldEvent.name == newEvent.name) return;
+    console.log( 'Emoji was updated.' );
     // Check if our default guild is correct
     if (bot.guilds.has(default_guild_name))
     {
