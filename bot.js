@@ -22,7 +22,7 @@ const bot = new Discord.Client({
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
-    logger.info(bot.user.tag+ ' - (' + bot.id + ') on ' + bot.guilds.size);
+    logger.info( bot.user + ' - (' + bot.id + ') on ' + bot.guilds.size);
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {

@@ -5,7 +5,8 @@
   "main": "bot.js",
   "author": "Mathias Holst Gundersen",
   "dependencies": {
-    "discord.io": "^2.5.3",
+    "discord.js": "^11.2.1",
+    "install": "^0.10.1",
     "winston": "^2.4.0"
   }
 }
