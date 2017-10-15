@@ -5,6 +5,6 @@
   "main": "bot.js",
   "author": "Mathias Holst Gundersen",
   "dependencies": {
-    "discord.io": "^2.5.3"
+    "discord.js": "github:hydrabolt/discord.js"
   }
 }
