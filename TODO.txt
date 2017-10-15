@@ -1,0 +1,2 @@
+- Message command to list all emojis
+- 
