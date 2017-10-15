@@ -1,9 +1,9 @@
-var Discord = require('discord.io');  // Using the package discord.io
-var logger = require('winston');      // Using the package winston
-var auth = require('./auth.json');    // Using the file auth.json
-var MongoClient = require('mongodb').MongoClient // Using the package for the mongodb
-var url = "mongodb://localhost:27017/team-helper-tournament-info"; // Url for the db - The collection is called "tournaments"
-var tournament_collection = "tournaments";
+const Discord = require('discord.io');  // Using the package discord.io
+const logger = require('winston');      // Using the package winston
+const auth = require('./auth.json');    // Using the file auth.json
+const MongoClient = require('mongodb').MongoClient // Using the package for the mongodb
+const url = "mongodb://localhost:27017/team-helper-tournament-info"; // Url for the db - The collection is called "tournaments"
+const tournament_collection = "tournaments";
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -13,7 +13,7 @@ logger.add(logger.transports.Console, {
 logger.level = 'debug';
 
 // Initialize Discord Bot
-var bot = new Discord.Client({
+const bot = new Discord.Client({
    token: auth.token,
    autorun: true
 });
@@ -32,20 +32,20 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '!') {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
-        console.log(args)
+        logger.info(args)
 
         switch(cmd) {
             case 'tournaments':
                 logger.info('Found event tournaments')
                 // Callback function
-                handleTournaments(args[1], function(result) {
+                handleTournaments(args, function(result) {
                   // @Result is an array of JSON objects. To extract them
                   // you need to do something like this for each entry
                   // entry = JSON.parse(JSON.stringify(entry));
                   var informationMessage = "Here you go, " + user + "!\n";
                   bot.sendMessage({
                     to: channelID,
-                    message: "Currently unable to display tournament info :("
+                    message: informationMessage + result
                   });
                 }
               );
@@ -54,11 +54,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 logger.info('Found event hello')
                 bot.sendMessage({
                   to: channelID,
-                  message: 'Hello <@' + user + '> in the channel!'
+                  message: 'Hello ' + user + ' in the channel!'
                 });
                 bot.sendMessage({
                   to: userID,
-                  message: 'Hello <@' + user + '> in private chat!'
+                  message: 'Hello ' + user + ' in private chat!'
                 });
             break;
             // !ping
@@ -93,25 +93,31 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function handleTournaments(args, callback) {
   logger.info("handleTournaments args: " + args)
-  switch (args) {
-    case "all":
-    MongoClient.connect(url, function(err, db) {
-      if (err) {
-        logger.error("Unable to connect to mongoDB client")
-        throw err;
-      }
-      db.collection(tournament_collection)
-        .find({})
-        .toArray(function(err, result){
-          if (err) {
-            logger.error("Unable to make collection to array")
-            throw err;
-          }
-          db.close();
-          callback(result);
-        })
-    });
-    break;
+  switch (args[1]) {
+    case 'all':
+      callback("You searched for all tournaments!")
+      break;
+    case 'today':
+      callback("You searched for all available tournaments today!")
+      break;
+    case 'weekday':
+      callback("You searched for tournaments on a specific weekday")
+      break;
+    case 'name':
+      callback("You searched for a specific tournament site!")
+      break;
+    case 'teamsize':
+      callback("You searched for ")
+      break;
+    default:
+      callback(
+        "The arguments you can give are as follows!\n" +
+        "all - Shows all tournaments\n" +
+        "today - Finds all tournaments that are available today\n" + 
+        "weekday 'day' - Shows all tournaments on a specific day" + 
+        "name 'name' - Shows all tournaments from a specific site/with specific name\n" +
+        "teamsize 'size' - Shows all tournaments with a specific team size\n"
+      )
   }
 }
 /*
@@ -125,4 +131,21 @@ function handleTournaments(args, callback) {
   //console.log("resultInformation: " + resultInformation)
   //console.log("returnInformation: " + returnInformation)
 })
+
+      MongoClient.connect(url, function(err, db) {
+        if (err) {
+          logger.error("Unable to connect to mongoDB client")
+          throw err;
+        }
+        db.collection(tournament_collection)
+          .find({})
+          .toArray(function(err, result){
+            if (err) {
+              logger.error("Unable to make collection to array")
+              throw err;
+            }
+            db.close();
+            callback(result);
+          })
+      });
 */
