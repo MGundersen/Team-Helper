@@ -64,17 +64,36 @@ bot.on('message', async message => {
             message.channel.send(message.author.tag + " is OP");
             break;
         case 'kick':
+            // Does the user have permission?
             if (!message.member.permissions.has('ADMINISTRATOR'))
             {
-                message.reply("You are not an admin!!");
+                return message.reply("Sorry, you don't have permissions to use this!");
             }
+            // Is the member valid?
             const memberToKick = message.mentions.members.first();
             if (!memberToKick)
             {
-                return message.reply(`Invalid usage, please do '${config.prefix}kick @user1234'` )
+                return message.reply("Please mention a valid member of this server");
             }
-            message.channel.search( memberToKick + ' has been kicked.' );
-            memberToKick.kick(`Kicked by ${message.author.tag}`);
+            // Is the member kickable?
+            if(!member.kickable)
+            {
+                return message.reply("I cannot kick this user! Do they have a higher role? Do I have kick permissions?");
+            }
+            // kick reason - removes the first index, and then joins the rest with spaces in between.
+            // It is done because a kick message looks like '!kick user1234 reason for this ban', therefore we remove user1234 and concat the rest together
+            let kickReason = args.slice(1).join(' ');
+            if(!kickReason)
+            {
+                return message.reply("Please indicate a reason for the kick!");
+            }
+            // Kick the member
+            await member.kick(kickReason).catch(function(error)
+            {
+                message.reply(`Sorry ${message.author} I couldn't kick because of : ${error}`)
+            }
+            );
+            message.reply(`${memberToKick.user.tag} has been kicked by ${message.author.tag} because: ${reason}`);
             break;
         case 'ban':
             // Does the user has the rights to ban members?
@@ -104,7 +123,7 @@ bot.on('message', async message => {
             await memberToBan.ban(banReason).catch( function(error) {
                 message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`);
             });
-            message.reply(`${member.user.tag} has been banned by ${message.author.tag} because: ${banReason}`);
+            message.reply(`${memberToBan.user.tag} has been banned by ${message.author.tag} because: ${banReason}`);
 
             break;
         case 'help':
@@ -139,6 +158,36 @@ bot.on('guildMemberAdd', function(guildMember) {
             const channel = bot.channels.get(default_channel_name)
             // Send a notification to it!
             channel.send( `Welcome to this discord, <@${guildMember.user.id}>!\nType '!help' to see what I can do for you. Until then, enjoy your stay!` );
+            return;
+        }
+        else
+        {
+            // If we end up here, then we were unable to find channel
+            console.log( "emojiDelete: Was unable to find channel" );
+        }
+    }
+    else
+    {
+        // If we end up here, then we were unable to find guild
+        console.log( "emojiDelete: Was unable to find guild" );
+    }
+});
+
+// Sends a message to default channel when a member has been removed from the guild
+bot.on('guildMemberRemove', function(guildMember) {
+    console.log( 'Member was removed.' );
+    // Check if our default guild is correct
+    if (bot.guilds.has(default_guild_name))
+    {
+        // Get the default guild
+        const guild = bot.guilds.get(default_guild_name);
+        // Check if the default channel exists
+        if (guild.channels.has(default_channel_name))
+        {
+            // Get the default channel
+            const channel = bot.channels.get(default_channel_name)
+            // Send a notification to it!
+            channel.send( `<@${guildMember.user.id}> was removed from this discord.` );
             return;
         }
         else
