@@ -22,7 +22,7 @@ const bot = new Discord.Client({
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
+    logger.info('${bot.user.tag} - (${bot.id}) on ${bot.guilds.size}');
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
@@ -36,7 +36,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     switch(command) {
       case 'tournaments':
           // Callback function
-          handleTournaments(args, function(result) {
+          handleTournaments(arguments, function(result) {
             // IF @Result is an array of JSON objects. To extract them
             // you need to do something like this for each entry
             // entry = JSON.parse(JSON.stringify(entry));
@@ -90,8 +90,8 @@ bot.on('message', function (user, userID, channelID, message, evt) {
    }
 });
 
-function handleTournaments(args, callback) {
-  switch (args[1]) {
+function handleTournaments(arguments, callback) {
+  switch (arguments[1]) {
     case 'all':
       callback("You searched for all tournaments!")
       break;
