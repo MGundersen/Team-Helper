@@ -1,8 +1,8 @@
-const Discord = require('discord.io');  // Using the package discord.io
+const Discord = require('discord.js');  // Using the package discord.io
 const logger = require('winston');      // Using the package winston
 const config = require('./config.json');    // Using the file auth.json
-const MongoClient = require('mongodb').MongoClient // Using the package for the mongodb
-const url = "mongodb://localhost:27017/team-helper-tournament-info"; // Url for the db - The collection is called "tournaments"
+//const MongoClient = require('mongodb').MongoClient // Using the package for the mongodb
+//const url = "mongodb://localhost:27017/team-helper-tournament-info"; // Url for the db - The collection is called "tournaments"
 const tournament_collection = "tournaments";
 
 // Configure logger settings
@@ -22,10 +22,10 @@ const bot = new Discord.Client({
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
-    logger.info( bot.user + ' - (' + bot.id + ') on ' + bot.guilds.size);
+    logger.info( bot.user.tag + ' - (' + bot.id + ') on ' + bot.guilds.size);
 });
 
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', msg => {
     // Checker whether it is a message for us!
     if (!message.startsWith(config.prefix)) return;
     // Get the arguments
@@ -33,61 +33,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     // Get the actual command
     const command = arguments.shift().toLowerCase();
     // What do perform?
-    switch(command) {
-      case 'tournaments':
-          // Callback function
-          handleTournaments(arguments, function(result) {
-            // IF @Result is an array of JSON objects. To extract them
-            // you need to do something like this for each entry
-            // entry = JSON.parse(JSON.stringify(entry));
-            var informationMessage = "Here you go, " + user + "!\n";
-            bot.sendMessage({
-              to: channelID,
-              message: informationMessage + result
-            });
-          }
-        );
-      break;
-      case 'hello':
-          bot.sendMessage({
-            to: channelID,
-            message: 'Hello ' + user + ' in the channel!'
-          });
-          bot.sendMessage({
-            to: userID,
-            message: 'Hello ' + user + ' in private chat!'
-          });
-      break;
-      // !ping
-      case 'ping':
-          bot.sendMessage({
-              to: channelID,
-              message: 'Pong!'
-          });
-      break;
-      case 'help':
-          bot.sendMessage({
-              to: channelID,
-              message: "All available commands are:\n" +
-              "Ping - Simply responds you with pong!\n" +
-              "op - Tells you, that you are OP!\n" +
-              "help - Gets this menu\n" +
-              "hello - Greets you back in the channel and in a private msg\n" +
-              "tournaments 'request'- type '!tournaments' for more information about the different requests\n"
-          });
-      break;
-      case 'op':
-          bot.sendMessage({
-              to: channelID,
-              message: user + " is OP"
-          });
-      break;
-      default:
-      bot.sendMessage({
-        to: channelID,
-        message: "If you tried to type in a command, then it was invalid. Try !help for more info."
-    });
-   }
+    
 });
 
 function handleTournaments(arguments, callback) {
